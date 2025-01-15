@@ -10,8 +10,6 @@ const conn = mysql.createConnection({
 conn.connect((err) => {
   if (err) throw err;
   console.log("Database Connected....");
-
-  // Corrected SQL query to create the 'posts' table
 });
 
 module.exports = conn;

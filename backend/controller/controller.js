@@ -2,15 +2,15 @@ const conn = require("../db/conn");
 
 const Controller = {
   postSend: async (req, res) => {
-    const { username, description } = req.body;
+    const { username, title, description } = req.body;
 
-    if (!username || !description) {
+    if (!username || !title || !description) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
     conn.query(
       "INSERT INTO posts SET ?",
-      { username, description },
+      { username, title, description },
       (err, result) => {
         if (err) {
           console.error("Error adding data:", err.message);
