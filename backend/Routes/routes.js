@@ -5,4 +5,6 @@ const Controller = require("../controller/controller");
 
 router.post("/sendPost", Controller.postSend);
 
+router.get("/getPost", Controller.postGet);
+
 module.exports = router;

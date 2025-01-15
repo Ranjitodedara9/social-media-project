@@ -24,6 +24,19 @@ const Controller = {
       }
     );
   },
+
+  postGet: async (req, res) => {
+    conn.query("SELECT * FROM posts", (err, result) => {
+      if (err) {
+        console.error("Error Geting data:", err.message);
+        return res
+          .status(500)
+          .json({ error: "Failed to get data to the database" });
+      } else {
+        res.status(201).json({ data: result });
+      }
+    });
+  },
 };
 
 module.exports = Controller;
