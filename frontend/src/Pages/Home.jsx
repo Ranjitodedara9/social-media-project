@@ -22,14 +22,14 @@ const Home = () => {
     <div className="flex flex-col justify-center items-center">
       {postData.length > 0 ? (
         postData.map((value, key) => (
-          <div className=" w-[300px] mt-5  border-solid border-2 border-sky-500 rounded-md">
-            <div className="bg-lime-500 w-[100%] text-white p-3">
+          <div className=" w-[400px] mt-5 shadow-3xl hover:shadow-4xl rounded-[10px] cursor-pointer">
+            <div className="bg-blue-600 w-[100%] text-white p-3 text-center">
               {value.title}
             </div>
             <div className="p-3 h-[150px] flex justify-center items-center ">
               {value.description}
             </div>
-            <div className="bg-lime-500 w-[100%] text-white p-3">
+            <div className="bg-blue-600 w-[100%] text-white p-3">
               {value.username}
             </div>
           </div>

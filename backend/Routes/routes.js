@@ -7,4 +7,8 @@ router.post("/post", Controller.postSend);
 
 router.get("/post", Controller.postGet);
 
+router.post("/users", Controller.userPost);
+
+router.get("/users", Controller.userGet);
+
 module.exports = router;

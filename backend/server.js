@@ -4,6 +4,7 @@ const cors = require("cors");
 const router = require("./Routes/routes");
 const app = express();
 require("./db/conn");
+//require("./Models/Post");
 
 app.use(express.json());
 app.use(cors());
