@@ -3,8 +3,8 @@ const router = new express.Router();
 const conn = require("../db/conn");
 const Controller = require("../controller/controller");
 
-router.post("/sendPost", Controller.postSend);
+router.post("/post", Controller.postSend);
 
-router.get("/getPost", Controller.postGet);
+router.get("/post", Controller.postGet);
 
 module.exports = router;

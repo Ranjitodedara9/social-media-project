@@ -33,7 +33,7 @@ const Controller = {
           .status(500)
           .json({ error: "Failed to get data to the database" });
       } else {
-        res.status(201).json({ data: result });
+        res.status(201).json(result);
       }
     });
   },
