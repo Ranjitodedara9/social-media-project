@@ -1,4 +1,5 @@
 const conn = require("../db/conn");
+const bcrypt = require("bcrypt");
 
 const Controller = {
   postSend: async (req, res) => {
@@ -42,9 +43,14 @@ const Controller = {
     try {
       const { username, password } = req.body;
 
+      // Hash the password
+      const saltRounds = 10; // Higher value = more secure but slower
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      // Insert into database
       conn.query(
         "INSERT INTO users SET ?",
-        { username, password },
+        { username, password: hashedPassword }, // Store the hashed password
         (err, result) => {
           if (err) {
             console.error("Error adding User data:", err.message);
@@ -54,11 +60,12 @@ const Controller = {
           }
           res
             .status(201)
-            .json({ message: "User added successfully", data: req.body });
+            .json({ message: "User added successfully", data: { username } }); // Avoid returning the password
         }
       );
     } catch (error) {
-      console.log(error);
+      console.error("Error during user registration:", error.message);
+      res.status(500).json({ error: "An error occurred during registration" });
     }
   },
 
@@ -73,6 +80,48 @@ const Controller = {
         res.status(201).json(result);
       }
     });
+  },
+
+  userLogin: async (req, res) => {
+    try {
+      const { username, password } = req.body;
+
+      if (!username || !password) {
+        return res
+          .status(400)
+          .json({ error: "Username and password are required" });
+      }
+
+      conn.query(
+        "SELECT * FROM users WHERE username = ?",
+        [username],
+        async (err, results) => {
+          if (err) {
+            console.error("Error querying the database:", err.message);
+            return res.status(500).json({ error: "Database error" });
+          }
+
+          // Check if user exists
+          if (results.length === 0) {
+            return res.status(404).json({ error: "User not found" });
+          }
+
+          const user = results[0];
+
+          // Compare the provided password with the hashed password in the database
+          const isMatch = await bcrypt.compare(password, user.password);
+
+          if (!isMatch) {
+            return res.status(401).json({ error: "Invalid credentials" });
+          }
+
+          res.status(200).json({ message: "Login successful", user });
+        }
+      );
+    } catch (error) {
+      console.error("Error in userLogin:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
   },
 };
 
