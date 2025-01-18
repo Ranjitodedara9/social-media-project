@@ -2,16 +2,16 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "./Pages/Home";
 import PostReg from "./Pages/postReg";
+import Login from "./Pages/Login";
+import Registration from "./Pages/Registration";
+import Navbar from "./Pages/Navbar";
 
 const App = () => {
+  const token = localStorage.getItem("token");
   return (
     <Router>
+      <Navbar />
       <div>
-        <nav className="text-center bg-blue-700 h-[50px] text-white flex justify-center items-center gap-3">
-          <Link to="/">Home </Link> |
-          <Link to="/createpost">Create New Post</Link>
-        </nav>
-
         <Routes>
           <Route
             path="/"
@@ -21,8 +21,27 @@ const App = () => {
             path="/createpost"
             element={<PostReg />}
           />
+          {!token ? (
+            <Route
+              path="/login"
+              element={<Login />}
+            />
+          ) : (
+            <Route
+              path="/"
+              element={<Home />}
+            />
+          )}
+
+          <Route
+            path="/register"
+            element={<Registration />}
+          />
         </Routes>
       </div>
+      <footer className="bg-blue-700 h-[60px] text-white flex justify-between items-center px-5 shadow-md mt-5">
+        Social Media Web App
+      </footer>
     </Router>
   );
 };

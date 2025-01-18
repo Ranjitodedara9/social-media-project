@@ -1,5 +1,6 @@
 const conn = require("../db/conn");
 const bcrypt = require("bcrypt");
+const { generateToken } = require("../mIddleware/Auth");
 
 const Controller = {
   postSend: async (req, res) => {
@@ -58,9 +59,14 @@ const Controller = {
               .status(500)
               .json({ error: "Failed to add User data to the database" });
           }
+          const token = generateToken(username);
           res
             .status(201)
-            .json({ message: "User added successfully", data: { username } }); // Avoid returning the password
+            .json({
+              message: "User added successfully",
+              token,
+              data: { username },
+            }); // Avoid returning the password
         }
       );
     } catch (error) {
@@ -115,12 +121,15 @@ const Controller = {
             return res.status(401).json({ error: "Invalid credentials" });
           }
 
-          res.status(200).json({ message: "Login successful", user });
+          const payload = { username: username };
+          const token = generateToken(payload);
+
+          res.status(200).json({ message: "Login successful", token, user });
         }
       );
     } catch (error) {
-      console.error("Error in userLogin:", error);
-      res.status(500).json({ error: "Internal server error" });
+      console.error("Invalid username or password!", error);
+      res.status(500).json({ error: "Invalid username or password" });
     }
   },
 };

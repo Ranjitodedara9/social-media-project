@@ -2,12 +2,13 @@ const express = require("express");
 const router = new express.Router();
 const conn = require("../db/conn");
 const Controller = require("../controller/controller");
+const { authenticateToken } = require("../mIddleware/Auth");
 
 // For Post
 
-router.post("/post", Controller.postSend);
+router.post("/post", authenticateToken, Controller.postSend);
 
-router.get("/post", Controller.postGet);
+router.get("/post", authenticateToken, Controller.postGet);
 
 // For user Login And Sige-up
 
