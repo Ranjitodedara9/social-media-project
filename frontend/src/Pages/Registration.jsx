@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { userReg } from "../Api/Api";
 
 function Registration() {
   const [formData, setFormData] = useState({
@@ -31,14 +32,7 @@ function Registration() {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/users",
-        formData
-      );
-      console.log("Response:", response.data);
-
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("username", response.data.data.username);
+      const response = await userReg(formData);
 
       // Reset form and show success message
       setFormData({
@@ -54,10 +48,10 @@ function Registration() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen ">
+    <div className="flex justify-center items-center min-h-screen bg-bg-color">
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-3xl rounded-lg p-8 w-full max-w-md">
+        className="bg-form-color shadow-3xl rounded-lg p-8 w-full max-w-md">
         {/* Error Message */}
         {error && (
           <div className="text-red-500 text-center mb-4 font-medium">
@@ -72,13 +66,13 @@ function Registration() {
           </div>
         )}
 
-        <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
+        <h2 className="text-2xl font-bold text-white text-center mb-6">
           Registration
         </h2>
 
         {/* Username Field */}
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">
+          <label className="block text-white font-medium mb-2">
             Enter a Username
           </label>
           <input
@@ -86,14 +80,14 @@ function Registration() {
             name="username"
             value={formData.username}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6780AB] bg-form-color text-white"
             placeholder="Enter your username"
           />
         </div>
 
         {/* Title Field */}
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">
+          <label className="block text-white font-medium mb-2">
             Enter a password
           </label>
           <input
@@ -101,7 +95,7 @@ function Registration() {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6780AB] bg-form-color text-white"
             placeholder="Enter a Password"
           />
         </div>
@@ -109,15 +103,15 @@ function Registration() {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300">
+          className="w-full bg-btn-color text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300">
           Submit
         </button>
         {/* Login Link */}
-        <p className="text-gray-600 text-center mt-4">
+        <p className="text-white text-center mt-4">
           Do You have an account?{" "}
           <Link
             to="/login"
-            className="text-blue-500 hover:underline">
+            className="text-btn-color hover:underline">
             Login here
           </Link>
         </p>

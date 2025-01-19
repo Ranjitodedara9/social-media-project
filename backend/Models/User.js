@@ -1,25 +1,21 @@
 module.exports = (sequelize, DataTypes) => {
-  const Post = sequelize.define(
-    "Post",
+  const User = sequelize.define(
+    "User",
     {
       // Model attributes are defined here
       username: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      title: {
+      password: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      description: {
-        type: DataTypes.TEXT,
       },
     },
     {
       timestamps: false,
-      tableName: "posts",
+      tableName: "users",
     }
   );
-
-  return Post;
+  return User;
 };

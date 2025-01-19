@@ -1,15 +1,14 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
-const router = require("./Routes/routes");
 const app = express();
-require("./db/conn");
-//require("./Models/Post");
+require("./Models/index");
+const postRouter = require("./Routes/postRoute");
+const userRouter = require("./Routes/userRoutes");
 
 app.use(express.json());
 app.use(cors());
-
-app.use(router);
+app.use(userRouter, postRouter);
 
 const PORT = 3000;
 
