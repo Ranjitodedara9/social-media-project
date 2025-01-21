@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { postAllGet } from "../Api/Api";
+import { commentGet, commentPost, postById } from "../Api/Api";
 
 const PostDetails = () => {
   const [postData, setPostData] = useState([]);
@@ -14,10 +14,11 @@ const PostDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await postAllGet();
-        setPostData(response.allPost || []);
-        // Assuming `response.allPost[0].comments` contains the comments array
-        setComments(response.allPost[0]?.comments || []);
+        const response = await postById();
+        const cmtresponse = await commentGet();
+        setPostData(response || []);
+        setComments(cmtresponse.Comments);
+        console.log(cmtresponse.Comments);
       } catch (err) {
         setError("Error fetching data. Please try again later.");
       } finally {
@@ -28,14 +29,15 @@ const PostDetails = () => {
     fetchData();
   }, []);
 
-  const handleAddComment = () => {
+  const handleAddComment = async () => {
     if (newComment.trim() === "") return;
+    const id = localStorage.getItem("postId");
 
-    // Add the new comment to the comments state (optimistic UI update)
-    setComments((prevComments) => [
-      ...prevComments,
-      { username: "CurrentUser", text: newComment },
-    ]);
+    const data = await commentPost(id, newComment);
+    console.log(data);
+    const cmtresponse = await commentGet();
+
+    setComments(cmtresponse.Comments);
     setNewComment("");
 
     // Optionally, send the new comment to the backend (not implemented here)
@@ -86,31 +88,31 @@ const PostDetails = () => {
   return (
     <div className="flex justify-center w-full min-h-screen bg-bg-color pb-5 gap-5">
       {/* Post Container */}
-      <div className="w-[40%] mt-5 flex flex-col shadow-3xl hover:shadow-4xl rounded-[10px]">
-        <div className="bg-box2-color w-full text-white p-3 text-center">
-          {postData[0]?.title}
+      <div className="w-[40%]  mt-5 flex flex-col ">
+        <div className="bg-box2-color w-full text-white p-7 text-center">
+          {postData.title}
         </div>
         <div className="p-3 h-[300px] flex justify-center items-center text-white bg-box-color">
-          {postData[0]?.description}
+          {postData.description}
         </div>
-        <div className="bg-box2-color w-full text-white p-3 text-right">
-          By {postData[0]?.username}
+        <div className="bg-box2-color w-full text-white p-7 text-right">
+          Post By {postData.username}
         </div>
       </div>
 
       {/* Comments Section */}
-      <div className="flex flex-col w-[40%]  mt-5 bg-form-color p-5 rounded-lg shadow-md">
+      <div className="flex flex-col w-[40%]  min-h-full mt-5 bg-form-color p-5 rounded-lg shadow-md">
         <h3 className="text-lg font-bold mb-3 text-white">Comments</h3>
         {comments.length > 0 ? (
           <div className="flex flex-col gap-4 ">
             {comments.map((comment, index) => (
               <div
                 key={index}
-                className="p-3 border rounded-lg bg-white shadow-sm flex flex-col">
-                <span className="text-gray-800 font-semibold">
+                className="p-3 border rounded-lg bg-form-color shadow-sm flex flex-col">
+                <span className="text-btn-color gray-800 font-semibold">
                   {comment.username}
                 </span>
-                <span className="text-white">{comment.text}</span>
+                <span className="text-white">{comment.commentBody}</span>
               </div>
             ))}
           </div>
@@ -127,7 +129,7 @@ const PostDetails = () => {
             placeholder="Add a comment..."
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            className="w-full p-2 border rounded-lg mb-2 text-white"
+            className="w-full p-2 border rounded-lg mb-2 text-white bg-form-color"
           />
           <button
             onClick={handleAddComment}
