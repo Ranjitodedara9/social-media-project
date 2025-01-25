@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an Axios instance with base configuration
 const api = axios.create({
-  baseURL: "http://localhost:4000", // Replace with your backend API base URL
+  baseURL: "https://social-media-project-0m4g.onrender.com/", // Replace with your backend API base URL
   headers: {
     "Content-Type": "application/json",
   },
