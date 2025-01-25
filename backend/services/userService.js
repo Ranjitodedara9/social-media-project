@@ -14,15 +14,18 @@ const userService = {
       throw new Error("Username already exists.");
     }
 
+    
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const userData = await User.create({ username, password: hashedPassword });
+
     const payload = {
-      username,
+      username: userData.username,
+      id: userData.id,
     };
 
     const token = await generateToken(payload);
-
-    const userData = await User.create({ username, password: hashedPassword });
 
     return {
       token,
@@ -42,7 +45,8 @@ const userService = {
     }
 
     const payload = {
-      username,
+      username: existingUser.username,
+      id: existingUser.id,
     };
 
     const token = await generateToken(payload);

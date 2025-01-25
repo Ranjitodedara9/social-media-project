@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "./Pages/Home";
 import PostReg from "./Pages/PostReg";
@@ -6,11 +6,21 @@ import Login from "./Pages/Login";
 import Registration from "./Pages/Registration";
 import Navbar from "./Screens/Navbar";
 import PostDetails from "./Pages/postDetails";
+import YourPost from "./Pages/YourPost";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const token = localStorage.getItem("token");
+
   return (
     <Router>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        theme="light"
+        hideProgressBar={false}
+      />
       <Navbar />
       <div>
         <Routes>
@@ -22,18 +32,10 @@ const App = () => {
             path="/createpost"
             element={<PostReg />}
           />
-          {!token ? (
-            <Route
-              path="/login"
-              element={<Login />}
-            />
-          ) : (
-            <Route
-              path="/"
-              element={<Home />}
-            />
-          )}
-
+          <Route
+            path="/login"
+            element={<Login />}
+          />
           <Route
             path="/register"
             element={<Registration />}
@@ -41,6 +43,10 @@ const App = () => {
           <Route
             path="/fullpost"
             element={<PostDetails />}
+          />
+          <Route
+            path="/yourpost"
+            element={<YourPost />}
           />
         </Routes>
       </div>

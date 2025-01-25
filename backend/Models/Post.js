@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       description: {
         type: DataTypes.TEXT,
       },
+      user_id: DataTypes.INTEGER,
     },
     {
       timestamps: false,

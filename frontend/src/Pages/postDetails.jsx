@@ -34,14 +34,15 @@ const PostDetails = () => {
     const id = localStorage.getItem("postId");
 
     const data = await commentPost(id, newComment);
-    console.log(data);
+
     const cmtresponse = await commentGet();
+
+    const response = await postById();
+
+    setPostData(response || []);
 
     setComments(cmtresponse.Comments);
     setNewComment("");
-
-    // Optionally, send the new comment to the backend (not implemented here)
-    // Example: await apiCallToAddComment(newComment);
   };
 
   if (!token) {
@@ -86,9 +87,9 @@ const PostDetails = () => {
   }
 
   return (
-    <div className="flex justify-center w-full min-h-screen bg-bg-color pb-5 gap-5">
+    <div className="md:flex justify-center w-full min-h-screen bg-bg-color pb-5 gap-5  max-md:pt-5  max-md:pb-5">
       {/* Post Container */}
-      <div className="w-[40%]  mt-5 flex flex-col ">
+      <div className="md:w-[40%] max-md:m-auto w-[90%] md:mt-5 flex flex-col ">
         <div className="bg-box2-color w-full text-white p-7 text-center">
           {postData.title}
         </div>
@@ -101,8 +102,10 @@ const PostDetails = () => {
       </div>
 
       {/* Comments Section */}
-      <div className="flex flex-col w-[40%]  min-h-full mt-5 bg-form-color p-5 rounded-lg shadow-md">
-        <h3 className="text-lg font-bold mb-3 text-white">Comments</h3>
+      <div className="flex flex-col md:w-[40%] w-[90%] max-md:m-auto  min-h-full mt-5 bg-form-color p-5 rounded-lg shadow-md">
+        <h3 className="text-lg font-bold mb-3 text-white">
+          Comments {postData.Comments.length}
+        </h3>
         {comments.length > 0 ? (
           <div className="flex flex-col gap-4 ">
             {comments.map((comment, index) => (

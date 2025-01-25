@@ -40,19 +40,11 @@ const userController = {
     } catch (error) {
       console.error("Error in user Login:", error.message);
 
-      if (error.message === "Username and password are required.") {
+      if (error.message === "User Not exists.") {
         return res.status(400).json({ error: error.message });
       }
 
-      if (error.message === "Username already exists.") {
-        return res.status(409).json({ error: error.message });
-      }
-
-      if (error.message === "User Not exists.") {
-        return res.status(409).json({ error: error.message });
-      }
-
-      if (error.message === "Username And Password Not Same") {
+      if (error.message === "Incorrect username or password.") {
         return res.status(409).json({ error: error.message });
       }
 

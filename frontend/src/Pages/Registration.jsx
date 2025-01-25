@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { userReg } from "../Api/Api";
+import { toast } from "react-toastify";
 
 function Registration() {
   const [formData, setFormData] = useState({
@@ -32,26 +32,44 @@ function Registration() {
     }
 
     try {
+      // Call the registration API
       const response = await userReg(formData);
 
-      // Reset form and show success message
-      setFormData({
-        username: "",
-        password: "",
-      });
-      setSuccessMessage("Registration successfully!");
-      navigate("/");
+      if (response) {
+        // Reset the form and show success message
+        setFormData({
+          username: "",
+          password: "",
+        });
+        toast.success("Registration successful!");
+        navigate("/");
+      }
     } catch (error) {
-      console.error("username Already Exit:", error);
-      setError("Error: Username Already Exit");
+      if (error) {
+        if (error.status == 409) {
+          setError(
+            "Error: Username already exists. Please choose a different username."
+          );
+        } else if (error.status === 400) {
+          setError(
+            "Error: Invalid input. Please ensure all fields are correct."
+          );
+        } else {
+          setError("Error: Something went wrong. Please try again later.");
+        }
+      } else {
+        setError(
+          "Error: Unable to connect to the server. Please check your internet connection."
+        );
+      }
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-bg-color">
+    <div className="flex justify-center items-center min-h-screen bg-bg-color p-4 sm:p-8">
       <form
         onSubmit={handleSubmit}
-        className="bg-form-color shadow-3xl rounded-lg p-8 w-full max-w-md">
+        className="bg-form-color shadow-lg rounded-lg p-6 sm:p-8 w-full max-w-md">
         {/* Error Message */}
         {error && (
           <div className="text-red-500 text-center mb-4 font-medium">
@@ -66,7 +84,7 @@ function Registration() {
           </div>
         )}
 
-        <h2 className="text-2xl font-bold text-white text-center mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-white text-center mb-6">
           Registration
         </h2>
 
@@ -80,23 +98,23 @@ function Registration() {
             name="username"
             value={formData.username}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6780AB] bg-form-color text-white"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-form-color text-white"
             placeholder="Enter your username"
           />
         </div>
 
-        {/* Title Field */}
+        {/* Password Field */}
         <div className="mb-4">
           <label className="block text-white font-medium mb-2">
-            Enter a password
+            Enter a Password
           </label>
           <input
             type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6780AB] bg-form-color text-white"
-            placeholder="Enter a Password"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-form-color text-white"
+            placeholder="Enter your password"
           />
         </div>
 
@@ -106,9 +124,10 @@ function Registration() {
           className="w-full bg-btn-color text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300">
           Submit
         </button>
+
         {/* Login Link */}
         <p className="text-white text-center mt-4">
-          Do You have an account?{" "}
+          Do you have an account?{" "}
           <Link
             to="/login"
             className="text-btn-color hover:underline">

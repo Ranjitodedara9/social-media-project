@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { userLogin } from "../Api/Api";
+import { toast } from "react-toastify";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -25,34 +25,43 @@ function Login() {
     setError("");
     setSuccessMessage("");
 
-    // Validate form inputs
     if (!formData.username || !formData.password) {
       setError("All fields are required.");
       return;
     }
 
     try {
-      const response = await userLogin(formData);
+      await userLogin(formData);
 
-      // Reset form and show success message
       setFormData({
         username: "",
         password: "",
       });
 
-      setSuccessMessage("Login successfully!");
+      toast.success("Login successfully!");
       navigate("/");
     } catch (error) {
-      console.error("Invalid username or password:", error);
-      setError("Error: Invalid username or password");
+      if (error) {
+        if (error.status == 400) {
+          setError("User Not exists.");
+        } else if (error.status == 409) {
+          setError("Incorrect username or password.");
+        } else {
+          setError("Error: Something went wrong. Please try again later.");
+        }
+      } else {
+        setError(
+          "Error: Unable to connect to the server. Please check your internet connection."
+        );
+      }
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-bg-color">
+    <div className="flex justify-center items-center min-h-screen bg-bg-color p-4 sm:p-8">
       <form
         onSubmit={handleSubmit}
-        className="bg-form-color shadow-3xl rounded-lg p-8 w-full max-w-md">
+        className="bg-form-color shadow-lg rounded-lg p-6 sm:p-8 w-full max-w-md">
         {/* Error Message */}
         {error && (
           <div className="text-red-500 text-center mb-4 font-medium">
@@ -67,7 +76,7 @@ function Login() {
           </div>
         )}
 
-        <h2 className="text-2xl font-bold text-white text-center mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-white text-center mb-6">
           Login
         </h2>
 
@@ -81,23 +90,23 @@ function Login() {
             name="username"
             value={formData.username}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6780AB] bg-form-color text-white"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-form-color text-white"
             placeholder="Enter your username"
           />
         </div>
 
-        {/* Title Field */}
+        {/* Password Field */}
         <div className="mb-4">
           <label className="block text-white font-medium mb-2">
-            Enter a password
+            Enter a Password
           </label>
           <input
             type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6780AB] bg-form-color text-white"
-            placeholder="Enter a Password"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-form-color text-white"
+            placeholder="Enter your password"
           />
         </div>
 
