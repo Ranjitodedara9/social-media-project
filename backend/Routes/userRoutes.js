@@ -5,7 +5,7 @@ const userController = require("../controller/userController");
 userRouter.post("/register", userController.userRegistration);
 userRouter.post("/login", userController.userLogin);
 
-userRouter.post("/", (req, res) => {
+userRouter.get("/", (req, res) => {
   res.send("backend work...");
 });
 
